@@ -52,18 +52,32 @@ class ShopView(View):
     
 
 
+# class DetailView(View):
+#     def get(self, request, product_title):
+#         # product = Product.objects.get(title=product_title)
+#         product = get_object_or_404(Product, title=product_title)
+
+#         context = {
+#             'title': 'E-Market - Product Detail Page',
+#             'today': get_today(),
+#             'product': product,
+#         }
+        
+#         return render(request, 'main/product_detail.html', context=context)
+
+
+
 class DetailView(View):
-    def get(self, request, product_title):
-        # product = Product.objects.get(title=product_title)
-        product = get_object_or_404(Product, title=product_title)
+    def get(self, request, product_id):
+        # Now using product_id to get the product
+        product = get_object_or_404(Product, id=product_id)
 
         context = {
             'title': 'E-Market - Product Detail Page',
-            'today': get_today(),
             'product': product,
         }
-        
-        return render(request, 'main/shop-single.html', context=context)
+
+        return render(request, 'main/product_detail.html', context)
     
 
 
