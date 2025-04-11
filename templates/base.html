@@ -83,8 +83,19 @@
                         <li class="nav-item">
                             <a class="nav-link" href="{% url 'main:contact' %}">Contact</a>
                         </li>
+                
+                        {% if request.user.is_authenticated %}
+                            <li class="nav-item">
+                                <a class="nav-link" href="{% url 'users:logout' %}">Logout</a>
+                            </li>
+                        {% else %}
+                            <li class="nav-item">
+                                <a class="nav-link" href="{% url 'users:login' %}">Login</a>
+                            </li>
+                        {% endif %}
                     </ul>
                 </div>
+                
                 <div class="navbar align-self-center d-flex">
                     <div class="d-lg-none flex-sm-fill mt-3 mb-4 col-7 col-sm-auto pr-3">
                         <div class="input-group">
