@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}
+  E-Market - {{ customuser.username }}'s Followings
+{% endblock title %}
+
+{% block main %}
+<div class="container mt-5 mb-5">
+  <div class="row justify-content-center">
+    <div class="col-md-8">
+      <div class="card p-4 shadow-sm" style="background-color: rgba(255, 255, 255, 0.95); border-radius: 20px;">
+        <h2 class="mb-4 text-center">{{ customuser.username }}'s Followings</h2>
+
+        {% if customuser.following.all %}
+          <ul class="list-group list-group-flush">
+            {% for fw in customuser.following.all %}
+              <li class="list-group-item d-flex align-items-center">
+                <img src="{{ fw.avatar.url }}" class="rounded-circle me-3" width="50" height="50" alt="Avatar">
+                <div>
+                  <strong>{{ fw.username }}</strong><br>
+                  <small class="text-muted">{{ fw.job }}</small>
+                </div>
+                <a href="{% url 'users:profile' fw.username %}" class="btn btn-outline-primary btn-sm ms-auto">View Profile</a>
+              </li>
+            {% endfor %}
+          </ul>
+        {% else %}
+          <p class="text-center text-muted">Siz hali hech kimga follow qilmagansiz.</p>
+        {% endif %}
+
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock main %}

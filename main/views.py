@@ -1,30 +1,40 @@
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from django.views import View
 from datetime import datetime
-from products.models import Product
-from products.models import Category
+
+from products.models import Product, Category
+
+
+
 from django.shortcuts import get_object_or_404
 
 def for_all_pages(request):
     categories = Category.objects.all()
     return {'categories': categories}
 
-def get_today():
-    return datetime.date(datetime.today())
+
+def get_today(request):
+    today = datetime.date(datetime.today())
+    return {'today': today}
+
+def get_all_categories(request):
+    categories = Category.objects.all()
+    return {'categories': categories}
+
+def get_all_products():
+    return Product.objects.all()
 
 # Create your views here.
 
 class IndexView(View):
     def get(self, request):
         products = Product.objects.all()
-        category = Category.objects.all()
 
         context = {
             'title': 'E-Market',
-            'today': get_today(),
             'products': products,
-            'category': category,
         }
+
 
         return render(request, 'main/index.html', context=context)
     
@@ -44,8 +54,7 @@ class ShopView(View):
     def get(self, request):
 
         context = {
-            'title': 'E-Market - Product Listing Page',
-            'today': get_today()
+            'products': get_all_products(),
         }
         
         return render(request, 'main/shop.html', context=context)
@@ -53,13 +62,17 @@ class ShopView(View):
 
 
 class DetailView(View):
+
+    
+
     def get(self, request, product_title):
         # product = Product.objects.get(title=product_title)
         product = get_object_or_404(Product, title=product_title)
 
         context = {
             'title': 'E-Market - Product Detail Page',
-            'today': get_today(),
+
+
             'product': product,
         }
         
@@ -70,10 +83,7 @@ class DetailView(View):
 class ContactView(View):
     def get(self, request):
 
-        context = {
-            'title': 'E-Market - Contact',
-            'today': get_today()
-        }
+        context = {}
         
         return render(request, 'main/contact.html', context=context)
     
@@ -82,10 +92,7 @@ class ContactView(View):
 class AboutView(View):
     def get(self, request):
 
-        context = {
-            'title': 'E-Market - About Page',
-            'today': get_today()
-        }
+        context = {}
         
         return render(request, 'main/about.html', context=context)
 
@@ -94,9 +101,21 @@ class AboutView(View):
 class FAQsView(View):
     def get(self, request):
 
-        context = {
-            'title': 'E-Market - FAQs',
-            'today': get_today()
-        }
+        context = {}
         
         return render(request, 'main/faqs.html', context=context)
+
+
+
+class CategoryView(View):
+    def get(self, request, category_name):
+        category = get_object_or_404(Category, name=category_name)
+        products = Product.objects.filter(category=category)
+
+        context = {
+            'category': category,
+            'products': products,
+        }
+
+        return render(request, 'main/category.html', context=context)
+    

@@ -1,0 +1,100 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}
+  E-Market - {{customuser}}
+{% endblock title %}
+
+{% block main %}
+<div class="container mt-5 mb-5">
+    <div class="row d-flex justify-content-center">
+        <div class="col-md-7">
+            <div class="card p-3 py-4" style="background-color: rgba(0, 0, 0, 0.1);">
+                <div class="text-center">
+                    <img src="{{ customuser.avatar.url }}" width="100" class="rounded-circle">
+                </div>
+                <div class="text-center mt-3">
+                    <span class="bg-secondary p-1 px-4 rounded text-white">{{ customuser.get_full_name }}</span>
+                    <h5 class="mt-2 mb-0"></h5>
+                    <span>{{ customuser.job }}</span>
+                    <div class="px-4 mt-1">
+                        <pre class="fonts" style="font-size: medium;">{{ customuser.bio }}</pre>
+                    </div>
+                    <ul class="social-list">
+                        <li>
+                            <a href="http://t.me/@{{ customuser.tg_username }}">
+                                <i class="fa fa-telegram"></i>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="mailto:{{ customuser.email }}">
+                                <i class="fa fa-envelope"></i>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="tel:{{ customuser.phone_number }}">
+                                <i class="fa fa-phone"></i>
+                            </a>
+                        </li>
+                    </ul>
+                    {% if customuser != request.user %}
+                        <div class="user-actions">
+                            <span id="followers-count">{{ customuser.followers.count }} followers</span>
+                            <button id="follow-btn" 
+                                    class="btn {% if customuser in request.user.following.all %}btn-danger{% else %}btn-primary{% endif %}"
+                                    data-username="{{ customuser.username }}">
+                                {% if customuser in request.user.following.all %}
+                                    Unfollow
+                                {% else %}
+                                    Follow
+                                {% endif %}
+                            </button>
+                        </div>
+                    {% endif %}
+                    
+                    {% if customuser == request.user %}
+                        <div class="buttons">
+                            <a href="{% url 'users:followings' customuser.username %}"><button class="btn px-4 ms-3">Followings</button></a>
+                            <a href="{% url 'users:followers' customuser.username %}"><button class="btn px-4 ms-3">Followers</button></a>
+                            <a href="{% url 'users:profile-edit' %}"><button class="btn px-4 ms-3">Profile edit</button></a>
+                            <a href="{% url 'users:password-change' %}"><button class="btn px-4 ms-3">Change password</button></a>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<hr style="color: springgreen;">
+ <!-- Product Cart Start -->
+ <div class="container">
+    <div class=" w-100 mt-4 mb-5">
+        <h4 class="d-block" >Recently Products of @{{customuser}}</h4>
+        {% if not customuser.product_set.exists %}
+            <center class="text-muted" >There is no products</center>
+        {% endif %}    
+        <div class="d-flex flex-wrap justify-content-between">
+            {% for product in customuser.product_set.all %}
+            <!-- Product Cart Start -->
+            <div class="card border border-0 shadow-sm d-inline-block m-1 mt-3" style="width: 16.5rem;" >
+                {% if product.productimage_set.exists %}
+                <img style="object-fit: fill;" height="200" class=" card-img-top" src="{{ product.productimage_set.all.first.image.url }}" alt="">
+                {% else %}
+                <img height="200" class=" card-img-top" src="{% static 'img/banner_img_02.jpg' %}" alt="">
+                {% endif %}
+                <div class="card-body">
+                    <h6 class="align-center card-title">{{ product.title }}</h6>
+                    <span class="center card-text"><small>$ {{ product.price }}</small></span>
+                    <div class="buttons d-flex flex-wrap justify-content-between ">
+                        <i class="bi bi-bookmark-fill"></i> 
+                        <a href="#" class="btn btn-outline-primary">Details</a>
+                    </div>
+                </div>
+            </div>  
+            <!-- Product Cart End -->
+            {% endfor %}
+        </div>
+    </div>
+</div>
+<!-- Product Cart End -->
+{% endblock main %}

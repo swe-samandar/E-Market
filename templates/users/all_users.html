@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}
+  E-Market - Our Users
+{% endblock title %}
+
+{% block main %}
+<div class="container mt-5 mb-5">
+  <div class="row justify-content-center">
+    <div class="col-md-8">
+      <div class="card p-4 shadow-sm" style="background-color: rgba(255, 255, 255, 0.95); border-radius: 20px;">
+        <h2 class="mb-4 text-center">All users</h2>
+          <ul class="list-group list-group-flush">
+            {% for fw in users %}
+              <li class="list-group-item d-flex align-items-center">
+                <img src="{{ fw.avatar.url }}" class="rounded-circle me-3" width="50" height="50" alt="Avatar">
+                <div>
+                  <strong>{{ fw.username }}</strong><br>
+                  <small class="text-muted">{{ fw.job }}</small>
+                </div>
+                <a href="{% url 'users:profile' fw.username %}" class="btn btn-outline-primary btn-sm ms-auto">View Profile</a>
+              </li>
+            {% endfor %}
+          </ul>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock main %}

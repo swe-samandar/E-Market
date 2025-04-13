@@ -18,6 +18,8 @@ urlpatterns = [
     path('contact/', ContactView.as_view(), name='contact'),
     path('about/', AboutView.as_view(), name='about'),
     path('faqs/', FAQsView.as_view(), name='faqs'),
+
     path('category/<str:category_name>/', CategoryView.as_view(), name='category'),
 
 ]          
+

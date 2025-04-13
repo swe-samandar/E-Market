@@ -40,6 +40,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'crispy_forms',
+    'crispy_bootstrap5',
     'main',
     'users',
     'products',
@@ -71,7 +73,12 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+
+                'main.views.get_today',
+                'main.views.get_all_categories',
+
                 'main.views.for_all_pages',
+
             ],
         },
     },
@@ -154,7 +161,7 @@ CRISPY_ALLOWED_TEMPLATE_PACK = 'bootstrap5'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-# User
+
 AUTH_USER_MODEL = 'users.CustomUser'
 
 
@@ -171,4 +178,4 @@ CSRF_FAILURE_VIEW = 'django.views.csrf.csrf_failure'   # must be removed on prod
 
 
 
-#   ADMINS - nurxonov: shohjahon; admin: nurxonov; samandar: nemataliyev
+
