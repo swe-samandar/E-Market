@@ -1,3 +1,4 @@
+
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 from django.urls import reverse_lazy
@@ -61,11 +62,17 @@ class ProfileView(View):
         customuser = get_object_or_404(CustomUser, username=username)
         saveds = SavedProduct.objects.filter(user=customuser)
         products = Product.objects.filter(author=customuser)
+        
+        notificationss = ConversationRoom.objects.filter(user1=customuser)
+        notifications_ = ConversationRoom.objects.all()
+        print(type(notifications_))
+        notifications = [item for item in notifications_ if item.user2 == request.user ]
+        
         query = request.POST.get('q')
         if query:
             products = Product.objects.filter(title__icontains=query)
-            return render(request, 'users/profile.html', {'customuser':customuser, 'products':products})
-        return render(request, 'users/profile.html', {'customuser':customuser, 'products':products, 'saveds':saveds})
+            return render(request, 'users/profile.html', {'customuser':customuser, 'products':products, 'notifications': notifications if notifications else notificationss})
+        return render(request, 'users/profile.html', {'customuser':customuser, 'products':products, 'saveds':saveds, 'notifications': notifications if notifications else notificationss})
 
 
 class ProfileUpdateView(View):
@@ -179,3 +186,4 @@ def get_all_users(request):
     users = CustomUser.objects.all()
     print(users)
     return render(request, 'users/all_users.html', {'users':users})
+
