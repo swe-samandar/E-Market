@@ -28,7 +28,7 @@
                         <a class="btn btn-primary" href="#">Notifications</a>
                         <div class="dropdown-content">
                             {% for notification in notifications %}
-                        <a href="{% url 'conversation' notification.id %}">{{ notification.user2 }}</a>
+                        <a href="{% url 'conversation' notification.id %}">{{ notification.user1 }}</a>
                             {% endfor %}
 
                          </div>

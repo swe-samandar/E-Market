@@ -37,14 +37,14 @@ def logout_view( request):
 class ProfileView(View):
     def get(self, request, pk):
         user = get_object_or_404(CustomUser, pk=pk)
-        #notifications = ConversationRoom.objects.filter(user2=user)
+        notificationss = ConversationRoom.objects.filter(user1=user)
         notifications_ = ConversationRoom.objects.all()
         print(type(notifications_))
         notifications = [item for item in notifications_ if item.user2 == request.user ]
 
 
         return render(request, 'registration/profile.html', {'customuser': user,
-                                                             'notifications': notifications})
+                                                             'notifications': notifications if notifications else notificationss})
 
 
 class ProfileUpdateView(View, LoginRequiredMixin):
