@@ -22,7 +22,9 @@
                 {% endif %}
                 <div class="card-body">
                     <h6 class="align-center card-title">{{product.title}}</h6>
-                    <span class="center card-text"><small>$ {{product.price}}</small></span>
+                    <span class="center card-text"><small>$ {{product.price}}</small></span><br>
+                    <h7 class="align-center card-title">Seller: <a href="{% url 'users:profile' product.author.pk %}">{{product.author}}</a> </h7>
+
                     <div class="buttons d-flex flex-wrap justify-content-between ">
                         <i class="bi bi-bookmark-fill"></i> 
                     </div>

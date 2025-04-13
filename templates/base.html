@@ -161,14 +161,14 @@
                   <img src="{{ request.user.avatar.url }}" width="35" height="35" class=" fa fa-fw fa-user text-dark mr-3" alt="">
                 </button>
                 <ul class="dropdown-menu dropdown-menu-end dropdown-menu-lg">
-                  <li><a class="dropdown-item" href="#">Profile</a></li> <!-- url 'password_change'  >-->
-                  <li><a class="dropdown-item" href="#">Change password</a></li> <!-- url 'password_change'  >-->
-                  <li><a class="dropdown-item" href="">Logout</a></li><!-- url 'logout' >-->
+                  <li><a class="dropdown-item" href="{% url 'users:profile' request.user.pk %}">Profile</a></li>
+                  <li><a class="dropdown-item" href="{% url 'password_change' %}">Change password</a></li>
+                  <li><a class="dropdown-item" href="{% url 'users:logout' %}">Logout</a></li>
                 </ul>
 
                 {% else %}
-                <a href="#" class="btn btn-primary">Login</a>  <!-- url 'login'  >-->
-                <a href="#" class="btn btn-primary">SignUp</a>  <!-- url 'users:signup' >-->
+                <a href="{% url 'login' %}" class="btn btn-primary">Login</a>
+                <a href="{% url 'users:signup' %}" class="btn btn-primary">SignUp</a>
                 {% endif %}
 
 <!--                    <a class="nav-icon position-relative text-decoration-none" href="#">-->
