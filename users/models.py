@@ -28,3 +28,11 @@ class SavedProduct(models.Model):
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
     product = models.ForeignKey("products.Product", on_delete=models.CASCADE)
     date = models.DateTimeField(auto_now_add=True)
+
+
+class FAQ(models.Model):
+    author = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+    question = models.TextField()
+    answer = models.TextField(blank=True, null=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    answered_at = models.DateTimeField(blank=True, null=True)

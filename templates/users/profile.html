@@ -48,8 +48,21 @@
                                 {% else %}
                                     Follow
                                 {% endif %}
-                            </button>
+                        </button>
                         </div>
+                    {% endif %}
+
+                    {% if customuser.pk != request.user.pk %}
+                        <a class="btn btn-primary" href="{% url 'start_conversation' customuser.pk %}">Chat</a>
+                    {% else %}
+                        <li class="nav-item dropdown mb-3">
+                            <a class="btn btn-primary" href="#">Notifications</a>
+                            <div class="dropdown-content">
+                                {% for notification in notifications %}
+                                    <a href="{% url 'conversation' notification.id %}">{{ notification.user1 }}</a>
+                                {% endfor %}
+                            </div>
+                        </li>
                     {% endif %}
                     
                     {% if customuser == request.user %}
@@ -58,6 +71,7 @@
                             <a href="{% url 'users:followers' customuser.username %}"><button class="btn px-4 ms-3">Followers</button></a>
                             <a href="{% url 'users:profile-edit' %}"><button class="btn px-4 ms-3">Profile edit</button></a>
                             <a href="{% url 'users:password-change' %}"><button class="btn px-4 ms-3">Change password</button></a>
+                            <a href="{% url 'main:new-product' %}"><button class="btn px-4 ms-3">Add product</button></a>
                         </div>
                     {% endif %}
                 </div>

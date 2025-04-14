@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 {% block main %}
   <div class="container mt-5 mb-5">
-    <h3>Chat between {{ room.user1 }} and {{ room.user2 }}</h3>
+    <h3>Chat between: {{ room.user1 }} and {{ room.user2 }}</h3>
     <div class="chat-box border p-3 mb-3" style="height: 300px; overflow-y: scroll;">
       {% for msg in messages %}
         <div class="message {% if msg.sender == request.user %}sent{% else %}received{% endif %}">

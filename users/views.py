@@ -13,8 +13,7 @@ from django.http import JsonResponse, HttpResponse
 from django.views.decorators.http import require_POST
 from products.models import Product, Comment
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.utils.timezone import now
-
+from conversation.models import ConversationRoom
 # Create your views here.
 
 class SignUpView(View):
@@ -65,8 +64,7 @@ class ProfileView(View):
         
         notificationss = ConversationRoom.objects.filter(user1=customuser)
         notifications_ = ConversationRoom.objects.all()
-        print(type(notifications_))
-        notifications = [item for item in notifications_ if item.user2 == request.user ]
+        notifications = [item for item in notifications_ if item.user2 == request.user]
         
         query = request.POST.get('q')
         if query:
@@ -106,7 +104,7 @@ class NewCommentView(LoginRequiredMixin, View):
         if comment:
             comment.save()
             messages.info(request, 'Successfully Sended!')
-            return redirect('main:detail')
+            return redirect('main:detail', product.title)
         return HttpResponse("Add comment")
 
 
@@ -117,8 +115,7 @@ class DeleteCommentView(LoginRequiredMixin, View):
         if request.user == comment.author:
             comment.delete()
             messages.info(request, "Succesfully deleted!")
-        print("Salom Dunyo!")
-        return redirect('main:detail')
+        return redirect(request.META.get("HTTP_REFERER"))
 
 
 class AddRemovedSavedView(LoginRequiredMixin, View):

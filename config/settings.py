@@ -46,9 +46,6 @@ INSTALLED_APPS = [
     'users',
     'products',
     'conversation',
-
-    'crispy_forms',
-    'crispy_bootstrap5',
 ]
 
 MIDDLEWARE = [
@@ -73,12 +70,8 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
-
                 'main.views.get_today',
                 'main.views.get_all_categories',
-
-                'main.views.for_all_pages',
-
             ],
         },
     },
@@ -96,18 +89,6 @@ DATABASES = {
         'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
-
-
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.postgresql',
-#         'NAME': 'e_commerce_db',
-#         'USER': 'postgres',
-#         'PASSWORD': 'shoh448',
-#         'HOST': 'localhost',
-#         'PORT': '5432'
-#     }
-# }
 
 
 # Password validation

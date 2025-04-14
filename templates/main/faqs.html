@@ -8,6 +8,41 @@
 
 {% load static %}
 
-    <h1>FAQs</h1>
+<div class="container py-5">
+    <h2 class="mb-4 text-center">Frequently Asked Questions</h2>
+    
+    {% for faq in faqs %}
+    <div class="card mb-4 shadow-sm">
+        <div class="card-body">
+            <!-- SAVOL BLOKI -->
+            <div class="d-flex align-items-center mb-3">
+                <img src="{{ faq.user.avatar.url }}" alt="avatar" class="rounded-circle me-3" width="50" height="50">
+                <div>
+                    <strong>{{ faq.user.username }}</strong><br>
+                    <small class="text-muted">Asked on {{ faq.created_at|date:"F j, Y, H:i" }}</small>
+                </div>
+            </div>
+            <p class="mb-3"><strong>Q:</strong> {{ faq.question }}</p>
+
+            {% if faq.answer %}
+            <!-- JAVOB BLOKI -->
+            <div class="border-top pt-3 mt-3">
+                <div class="d-flex align-items-center mb-2">
+                    <i class="bi bi-person-check-fill me-2 text-success"></i>
+                    <small class="text-muted">Answered on {{ faq.answered_at|date:"F j, Y, H:i" }}</small>
+                </div>
+                <p class="mb-0"><strong>A:</strong> {{ faq.answer }}</p>
+            </div>
+            {% else %}
+            <div class="alert alert-warning mt-3 mb-0" role="alert">
+                Admin hali bu savolga javob bermagan.
+            </div>
+            {% endif %}
+        </div>
+    </div>
+    {% empty %}
+        <p class="text-center">Hozircha hech qanday savol yo‘q.</p>
+    {% endfor %}
+</div>
 
 {% endblock main %}
