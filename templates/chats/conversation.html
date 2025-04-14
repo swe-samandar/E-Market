@@ -1,0 +1,73 @@
+{% extends 'base.html' %}
+{% block main %}
+  <div class="container mt-5 mb-5">
+    <h3>Chat between: {{ room.user1 }} and {{ room.user2 }}</h3>
+    <div class="chat-box border p-3 mb-3" style="height: 300px; overflow-y: scroll;">
+      {% for msg in messages %}
+        <div class="message {% if msg.sender == request.user %}sent{% else %}received{% endif %}">
+          <div class="message-content">
+            <strong>{{ msg.sender.username }}:</strong> {{ msg.content }}
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+
+    <form method="POST">
+      {% csrf_token %}
+      {{ form.as_p }}
+      <button type="submit" class="btn btn-primary">Send</button>
+    </form>
+  </div>
+
+  <style>
+    /* Chat message styling */
+    .chat-box {
+      background-color: #f8f9fa;
+      border-radius: 8px;
+    }
+
+    .message {
+      margin-bottom: 12px;
+      max-width: 70%;
+      padding: 8px 12px;
+      border-radius: 12px;
+      word-wrap: break-word;
+    }
+
+    /* Sender's messages (right side) */
+    .message.sent {
+      background-color: #007bff;
+      color: white;
+      margin-left: auto;
+      border-bottom-right-radius: 4px;
+    }
+
+    /* Receiver's messages (left side) */
+    .message.received {
+      background-color: #e9ecef;
+      color: #212529;
+      margin-right: auto;
+      border-bottom-left-radius: 4px;
+    }
+
+    /* Improve form styling */
+    form {
+      margin-top: 20px;
+    }
+
+    form p {
+      margin-bottom: 10px;
+    }
+
+    .btn-primary {
+      background-color: #007bff;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 4px;
+    }
+
+    .btn-primary:hover {
+      background-color: #0056b3;
+    }
+  </style>
+{% endblock %}

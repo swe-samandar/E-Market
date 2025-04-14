@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}
+    E-Market - Category | {{ category.name }}
+{% endblock title %}
+
+{% block main %}
+    
+
+   <!-- Product Cart Start -->
+   <div class="container">
+    <div class=" w-100 mt-4">
+        <h4 class="d-block" >Products in {{ category }}</h4>
+        <div class="d-flex flex-wrap justify-content-between">
+            {% for product in products %}
+            <!-- Product Cart Start -->
+            <div class="card border border-0 shadow-sm d-inline-block m-1 mt-3" style="width: 16.5rem;" >
+                {% with product.images.all|first as image %}
+                    <a href="{% url 'main:detail' product.title %}">
+                        <img height="200" class=" card-img-top" src="{{ image.image.url }}" alt="">
+                    </a>
+                {% endwith %}
+                <div class="card-body">
+                    <h6 class="align-center card-title">{{ product.title }}</h6>
+                    <span class="center card-text"><small>${{ product.price }}</small></span><br>
+                    <h7 class="align-center card-title">Seller: <a href="{% url 'users:profile' product.author.username %}">{{product.author}}</a> </h7>
+
+                    <div class="buttons d-flex flex-wrap justify-content-between ">
+                        <i class="bi bi-bookmark-fill"></i> 
+                    </div>
+                </div>
+            </div>  
+            <!-- Product Cart End -->
+            {% endfor %}
+            
+        </div>
+    </div>
+</div>
+<!-- Product Cart End -->
+
+{% endblock main %}
