@@ -1,12 +1,12 @@
 from django import forms
 from django.forms import Textarea
 
-from .models import Message
+from .models import Messages
 
 
 class MessageForm(forms.ModelForm):
     class Meta:
-        model = Message
+        model = Messages
         fields = ['content']
         widgets = {
             'content': Textarea(attrs={

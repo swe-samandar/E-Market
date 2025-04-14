@@ -1,7 +1,7 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.views import View
 
-from .models import ConversationRoom, Message
+from .models import ConversationRoom, Messages
 from .forms import MessageForm
 from users.models import CustomUser
 
