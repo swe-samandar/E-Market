@@ -63,10 +63,11 @@ ROOT_URLCONF = 'config.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [BASE_DIR / 'templates'],
-        'APP_DIRS': True,
+        'DIRS': [BASE_DIR / 'templates'], 
+        'APP_DIRS': True,  
         'OPTIONS': {
             'context_processors': [
+                'django.template.context_processors.debug',
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
@@ -76,6 +77,7 @@ TEMPLATES = [
         },
     },
 ]
+
 
 WSGI_APPLICATION = 'config.wsgi.application'
 
@@ -141,8 +143,6 @@ CRISPY_ALLOWED_TEMPLATE_PACK = 'bootstrap5'
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-
-
 AUTH_USER_MODEL = 'users.CustomUser'
 
 
@@ -155,8 +155,3 @@ LOGOUT_REDIRECT_URL = 'main:index'
 SESSION_COOKIE_SECURE = False   # doesn't send cookies to http//:localhost 8000, so it may cause some issues on Safari
 # settings.py (for dev only)
 CSRF_FAILURE_VIEW = 'django.views.csrf.csrf_failure'   # must be removed on production
-
-
-
-
-

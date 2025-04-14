@@ -1,4 +1,3 @@
-
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 from django.urls import reverse_lazy
@@ -183,4 +182,3 @@ def get_all_users(request):
     users = CustomUser.objects.all()
     print(users)
     return render(request, 'users/all_users.html', {'users':users})
-

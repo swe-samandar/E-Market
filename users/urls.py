@@ -1,5 +1,5 @@
 from django.urls import path
-
+from . import views
 from .views import (
     SignUpView,
     LoginView,
@@ -37,9 +37,5 @@ urlpatterns = [
     path('<str:username>/followers/', get_followers, name='followers'),
     path('<str:username>/followigs/', get_followings, name='followings'),
     path('all/', get_all_users, name='all-users'),
-
-    
-
-
 ]
 

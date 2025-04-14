@@ -1,5 +1,4 @@
 from django.contrib import admin
-
 from .models import CustomUser, SavedProduct
 from django.contrib.auth.models import Group
 
@@ -14,4 +13,3 @@ class CustomUserAdmin(admin.ModelAdmin):
 admin.site.unregister(Group)
 admin.site.register(CustomUser, CustomUserAdmin)
 admin.site.register(SavedProduct, SavedProductAdmin)
-
