@@ -1,9 +1,9 @@
 from django.db import models
 from users.models import CustomUser
 
-class Message(models.Model):
+class Messages(models.Model):
     sender = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='sent_messages') # "related_name" bog'langan obyektni ushbu modeldagi obyektlarini olib beradi
-    receiver = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='received_messages')    #   user.sent_messages.all() user jo'natgan barcha xabarlarni beradi
+    receiver = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='received_message')    #   user.sent_messages.all() user jo'natgan barcha xabarlarni beradi
     content = models.TextField()
     status = models.BooleanField(default=False)
     room = models.ForeignKey("ConversationRoom", on_delete=models.CASCADE, related_name="messages")
