@@ -122,16 +122,28 @@ class AddRemovedSavedView(LoginRequiredMixin, View):
 
     def post(self, request, product_id):
         product = get_object_or_404(Product, id=product_id)
-        saved_products = SavedProduct.objects.filter(user=request.user, product=product)
-        if saved_products:
-            saved_products.delete()
-            # saved = False
-            messages.info(request, 'Removed')  
+        saved_product, created = SavedProduct.objects.get_or_create(
+            user=request.user,
+            product=product
+        )
+        
+        if not created:
+            saved_product.delete()
+            saved = False
+            message = 'Removed from saved'
         else:
-            SavedProduct.objects.create(user=request.user, product=product)    
-            # saved = True
-            messages.info(request, 'Saved')
-        return redirect(request.META.get("HTTP_REFERER"))
+            saved = True
+            message = 'Added to saved'
+        
+        if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+            return JsonResponse({
+                'saved': saved,
+                'message': message,
+                'count': SavedProduct.objects.filter(user=request.user).count()
+            })
+        
+        messages.info(request, message)
+        return redirect(request.META.get("HTTP_REFERER", "/"))
 
 
 class SavedsView(LoginRequiredMixin, View):
@@ -151,7 +163,7 @@ def password_change_done(request):
 
 
 @require_POST
-@login_required
+@login_required(login_url='users:login')
 def ajax_toggle_follow(request):
     target_user = get_object_or_404(CustomUser, username=request.POST.get('username'))
 

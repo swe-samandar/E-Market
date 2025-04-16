@@ -4,6 +4,8 @@ from datetime import datetime
 from products.models import Product, Category, ProductImage
 from .forms import NewProductForm
 from django.contrib.auth.decorators import login_required
+from django.contrib import messages
+from users.models import FAQ
 
 
 def get_today(request):
@@ -21,7 +23,7 @@ def get_all_products():
 
 class IndexView(View):
     def get(self, request):
-        products = Product.objects.all()
+        products = Product.objects.all().order_by('-views')
 
         context = {
             'products': products,
@@ -92,7 +94,10 @@ class AboutView(View):
 
 class FAQsView(View):
     def get(self, request):
-        context = {}  
+        faqs = FAQ.objects.all()
+        context = {
+            'faqs': faqs,
+        }  
         return render(request, 'main/faqs.html', context=context)
 
 
@@ -110,7 +115,7 @@ class CategoryView(View):
         return render(request, 'main/category.html', context=context)
     
 
-@login_required(login_url='login')
+@login_required(login_url='users:login')
 def new_product(request):
     if request.method == "GET":
         form = NewProductForm()
@@ -127,3 +132,44 @@ def new_product(request):
             )
             return redirect('main:index')
         return render(request, 'main/new_product.html', {'form':form})
+
+
+@login_required(login_url='users:login')
+def product_update(request, product_id):
+    product = get_object_or_404(Product, id=product_id)
+    if request.user==product.author:
+        if request.method=='GET':
+            form = NewProductForm(instance=product)
+            return render(request, 'main/update_product.html', {'form':form, 'product':product})
+        elif request.method == 'POST':
+            form = NewProductForm(instance = product, data=request.POST, files=request.FILES)
+            if form.is_valid():
+                form.save()
+                if request.FILES.getlist('images'):
+                    ProductImage.objects.filter(product=product).delete()
+                    productimages = []
+                    for image in request.FILES.getlist("images"):
+                        productimages.append(ProductImage(image=image, product=product))
+                    ProductImage.objects.bulk_create(
+                        productimages
+                    )
+                messages.success(request, 'Successfully Updated!')        
+                return redirect('main:detail', product.id)
+            return render(request, 'main/update_product.html', {'form':form, 'product':product})
+    else:
+        messages.error(request, 'Access danied!')
+        return redirect('main:index')
+    
+
+@login_required(login_url='users:login')
+def product_delete(request, product_id):
+    product = get_object_or_404(Product, id=product_id)
+    if request.user==product.author:  
+        if request.method=='POST':
+            product.delete()
+            messages.info(request, 'Successfully Deleted!')
+            return redirect('main:index') 
+        return render(request, "main/delete_product.html", {'product':product})
+    else:
+        messages.error(request, 'Access danied!')
+        return redirect('main:index')  

@@ -1,41 +1,164 @@
 {% extends 'base.html' %}
 {% load static %}
-{% block title %}
-    E-Market - Category | {{ category.name }}
-{% endblock title %}
+
+{% block title %}E-Market - {{ category.name }} Kategoriyasi{% endblock %}
 
 {% block main %}
-    
+<!-- Kategoriya Mahsulotlari -->
+<section class="py-4">
+    <div class="container">
+        <!-- Sarlavha -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="d-flex justify-content-between align-items-center">
+                    <h2 class="mb-0">
+                        <i class="fas fa-tag me-2 text-primary"></i>{{ category.name|title }} Kategoriyasi
+                    </h2>
+                    <span class="badge bg-primary rounded-pill">{{ products.count }} mahsulot</span>
+                </div>
+                <hr class="mt-2 mb-4">
+            </div>
+        </div>
 
-   <!-- Product Cart Start -->
-   <div class="container">
-    <div class=" w-100 mt-4">
-        <h4 class="d-block" >Products in {{ category }}</h4>
-        <div class="d-flex flex-wrap justify-content-between">
+        <!-- Mahsulotlar Gridi -->
+        <div class="row">
             {% for product in products %}
-            <!-- Product Cart Start -->
-            <div class="card border border-0 shadow-sm d-inline-block m-1 mt-3" style="width: 16.5rem;" >
-                {% with product.images.all|first as image %}
-                    <a href="{% url 'main:detail' product.title %}">
-                        <img height="200" class=" card-img-top" src="{{ image.image.url }}" alt="">
-                    </a>
-                {% endwith %}
-                <div class="card-body">
-                    <h6 class="align-center card-title">{{ product.title }}</h6>
-                    <span class="center card-text"><small>${{ product.price }}</small></span><br>
-                    <h7 class="align-center card-title">Seller: <a href="{% url 'users:profile' product.author.username %}">{{product.author}}</a> </h7>
-
-                    <div class="buttons d-flex flex-wrap justify-content-between ">
-                        <i class="bi bi-bookmark-fill"></i> 
+            <div class="col-xl-3 col-lg-4 col-md-6 mb-4">
+                <div class="card h-100 border-0 shadow-sm product-card">
+                    <!-- Mahsulot rasmi -->
+                    <div class="position-relative overflow-hidden" style="height: 200px;">
+                        {% with product.images.all|first as image %}
+                        <a href="{% url 'main:detail' product.title %}">
+                            <img class="card-img-top h-100 object-fit-cover" src="{{ image.image.url }}" alt="{{ product.title }}">
+                        </a>
+                        {% endwith %}
+                        <div class="card-img-overlay d-flex align-items-start justify-content-end p-2">
+                            <button class="btn btn-sm btn-light rounded-circle shadow-sm save-btn" data-product-id="{{ product.id }}">
+                                <i class="far fa-bookmark"></i>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- Mahsulot tafsilotlari -->
+                    <div class="card-body">
+                        <h5 class="card-title mb-1">
+                            <a href="{% url 'main:detail' product.title %}" class="text-decoration-none text-dark">{{ product.title|truncatechars:40 }}</a>
+                        </h5>
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <span class="text-success fw-bold">${{ product.price }}</span>
+                            <small class="text-muted">
+                                <i class="fas fa-user-circle me-1"></i>
+                                <a href="{% url 'users:profile' product.author.username %}" class="text-decoration-none">{{ product.author.username }}</a>
+                            </small>
+                        </div>
+                    </div>
+                    
+                    <!-- Ko'rish tugmasi -->
+                    <div class="card-footer bg-transparent border-top-0 pt-0">
+                        <a href="{% url 'main:detail' product.title %}" class="btn btn-outline-primary w-100 btn-sm">
+                            <i class="fas fa-eye me-1"></i> Batafsil
+                        </a>
                     </div>
                 </div>
-            </div>  
-            <!-- Product Cart End -->
+            </div>
+            {% empty %}
+            <div class="col-12">
+                <div class="alert alert-info text-center py-4">
+                    <i class="fas fa-info-circle fa-2x mb-3"></i>
+                    <h4>Ushbu kategoriyada mahsulotlar mavjud emas</h4>
+                    <p class="mb-0">Bosh kategoriyalardan mahsulotlarni ko'rib chiqing</p>
+                </div>
+            </div>
             {% endfor %}
-            
         </div>
     </div>
-</div>
-<!-- Product Cart End -->
+</section>
 
-{% endblock main %}
+<style>
+    /* Maxsus stillar */
+    .product-card {
+        transition: all 0.3s ease;
+        border-radius: 8px;
+        overflow: hidden;
+    }
+    
+    .product-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
+    }
+    
+    .object-fit-cover {
+        object-fit: cover;
+        width: 100%;
+    }
+    
+    .save-btn {
+        transition: all 0.2s ease;
+        width: 32px;
+        height: 32px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    
+    .save-btn:hover, .save-btn.active {
+        background-color: var(--bs-primary) !important;
+        color: white !important;
+    }
+    
+    .card-title a:hover {
+        color: var(--bs-primary) !important;
+    }
+</style>
+
+<script>
+    // Saqlash tugmasi uchun JavaScript
+    document.addEventListener('DOMContentLoaded', function() {
+        const saveButtons = document.querySelectorAll('.save-btn');
+        
+        saveButtons.forEach(button => {
+            button.addEventListener('click', function(e) {
+                e.preventDefault();
+                const icon = this.querySelector('i');
+                
+                // Ikonkani o'zgartirish
+                if (icon.classList.contains('far')) {
+                    icon.classList.replace('far', 'fas');
+                    this.classList.add('active');
+                    showToast('Mahsulot saqlandi');
+                } else {
+                    icon.classList.replace('fas', 'far');
+                    this.classList.remove('active');
+                    showToast('Mahsulot saqlanganlardan olib tashlandi');
+                }
+                
+                // Bu yerda AJAX so'rovini qo'shishingiz mumkin
+                // const productId = this.getAttribute('data-product-id');
+                // fetch(...)
+            });
+        });
+        
+        function showToast(message) {
+            const toast = document.createElement('div');
+            toast.className = 'position-fixed bottom-0 end-0 p-3';
+            toast.style.zIndex = '11';
+            toast.innerHTML = `
+                <div class="toast show align-items-center text-white bg-primary border-0" role="alert" aria-live="assertive" aria-atomic="true">
+                    <div class="d-flex">
+                        <div class="toast-body">
+                            ${message}
+                        </div>
+                        <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+                    </div>
+                </div>
+            `;
+            
+            document.body.appendChild(toast);
+            
+            setTimeout(() => {
+                toast.remove();
+            }, 3000);
+        }
+    });
+</script>
+{% endblock %}

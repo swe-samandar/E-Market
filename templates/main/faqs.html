@@ -1,48 +1,124 @@
 {% extends 'base.html' %}
-
-{% block title %}
-    E-Market - FAQs
-{% endblock title %}
-
-{% block main %}
-
 {% load static %}
 
-<div class="container py-5">
-    <h2 class="mb-4 text-center">Frequently Asked Questions</h2>
-    
-    {% for faq in faqs %}
-    <div class="card mb-4 shadow-sm">
-        <div class="card-body">
-            <!-- SAVOL BLOKI -->
-            <div class="d-flex align-items-center mb-3">
-                <img src="{{ faq.user.avatar.url }}" alt="avatar" class="rounded-circle me-3" width="50" height="50">
-                <div>
-                    <strong>{{ faq.user.username }}</strong><br>
-                    <small class="text-muted">Asked on {{ faq.created_at|date:"F j, Y, H:i" }}</small>
-                </div>
-            </div>
-            <p class="mb-3"><strong>Q:</strong> {{ faq.question }}</p>
+{% block title %}E-Market - Tez-tez So'raladigan Savollar{% endblock %}
 
-            {% if faq.answer %}
-            <!-- JAVOB BLOKI -->
-            <div class="border-top pt-3 mt-3">
-                <div class="d-flex align-items-center mb-2">
-                    <i class="bi bi-person-check-fill me-2 text-success"></i>
-                    <small class="text-muted">Answered on {{ faq.answered_at|date:"F j, Y, H:i" }}</small>
+{% block main %}
+<!-- FAQ Bo'limi -->
+<section class="py-5 bg-light">
+    <div class="container">
+        <!-- Sarlavha -->
+        <div class="row mb-5">
+            <div class="col-12 text-center">
+                <h2 class="fw-bold mb-3">
+                    <i class="fas fa-question-circle text-primary me-2"></i>
+                    Tez-tez So'raladigan Savollar
+                </h2>
+                <p class="lead text-muted">Foydalanuvchilar tomonidan berilgan savollar va ularga javoblar</p>
+            </div>
+        </div>
+
+        <!-- FAQ Ro'yxati -->
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                {% for faq in faqs %}
+                <div class="card mb-4 border-0 shadow-sm">
+                    <div class="card-body p-4">
+                        <!-- Savol qismi -->
+                        <div class="d-flex align-items-start">
+                            <img src="{{ faq.user.avatar.url }}" 
+                                 alt="{{ faq.user.username }}" 
+                                 class="rounded-circle me-3" 
+                                 width="60" 
+                                 height="60"
+                                 onerror="">
+                            <div class="flex-grow-1">
+                                <div class="d-flex justify-content-between align-items-center mb-2">
+                                    <h5 class="mb-0">{{ faq.user.username }}</h5>
+                                    <small class="text-muted">{{ faq.created_at|date:"d M Y, H:i" }}</small>
+                                </div>
+                                <div class="question-content bg-light p-3 rounded">
+                                    <h6 class="text-primary mb-0"><i class="fas fa-question-circle me-2"></i> {{ faq.question }}</h6>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Javob qismi -->
+                        {% if faq.answer %}
+                        <div class="answer-content mt-4 ps-5">
+                            <div class="d-flex align-items-center mb-2">
+                                <div class="bg-primary text-white rounded-circle p-2 me-3">
+                                    <i class="fas fa-check"></i>
+                                </div>
+                                <div>
+                                    <small class="text-muted">Admin javobi • {{ faq.answered_at|date:"d M Y, H:i" }}</small>
+                                </div>
+                            </div>
+                            <div class="bg-primary-light p-3 rounded">
+                                <p class="mb-0">{{ faq.answer }}</p>
+                            </div>
+                        </div>
+                        {% else %}
+                        <div class="mt-4 ps-5">
+                            <div class="alert alert-warning d-flex align-items-center mb-0" role="alert">
+                                <i class="fas fa-info-circle me-2"></i>
+                                <div>
+                                    Admin hali bu savolga javob bermagan
+                                </div>
+                            </div>
+                        </div>
+                        {% endif %}
+                    </div>
                 </div>
-                <p class="mb-0"><strong>A:</strong> {{ faq.answer }}</p>
+                {% empty %}
+                <div class="text-center py-5">
+                    <img src="{% static 'images/no-faq.svg' %}" alt="No questions" class="img-fluid mb-4" style="max-height: 200px;">
+                    <h4 class="mb-3">Hozircha savollar mavjud emas</h4>
+                    <p class="text-muted mb-4">Birinchi bo'lib savolingizni bering!</p>
+                    <a href="#" class="btn btn-primary px-4">
+                        <i class="fas fa-plus me-2"></i> Savol qo'shish
+                    </a>
+                </div>
+                {% endfor %}
             </div>
-            {% else %}
-            <div class="alert alert-warning mt-3 mb-0" role="alert">
-                Admin hali bu savolga javob bermagan.
-            </div>
-            {% endif %}
         </div>
     </div>
-    {% empty %}
-        <p class="text-center">Hozircha hech qanday savol yo‘q.</p>
-    {% endfor %}
-</div>
+</section>
 
-{% endblock main %}
+<style>
+    /* Maxsus stillar */
+    .bg-primary-light {
+        background-color: rgba(13, 110, 253, 0.1);
+        border-left: 3px solid #0d6efd;
+    }
+    
+    .question-content {
+        border-left: 3px solid #ffc107;
+    }
+    
+    .card {
+        transition: all 0.3s ease;
+        border-radius: 10px;
+        overflow: hidden;
+    }
+    
+    .card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+    }
+    
+    .answer-content {
+        position: relative;
+    }
+    
+    .answer-content::before {
+        content: "";
+        position: absolute;
+        left: 30px;
+        top: -15px;
+        width: 2px;
+        height: calc(100% + 15px);
+        background: #dee2e6;
+    }
+</style>
+{% endblock %}

@@ -1,8 +1,8 @@
 from django import forms
-from .models import Product, ProductImage
+from .models import Product
 
 class NewProductForm(forms.ModelForm):
-    images = forms.ImageField(widget=forms.ClearableFileInput(attrs={'multiple':True}), required=False)
+    images = forms.ImageField(widget=forms.ClearableFileInput(attrs={'multiple':True}), label='Mahsulot rasmlari')
 
     class Meta:
         model = Product
@@ -12,6 +12,4 @@ class NewProductForm(forms.ModelForm):
             product = self.instance
             product.author = request.user   
             super().save(commit)
-            return product
-
-
+            return product 
