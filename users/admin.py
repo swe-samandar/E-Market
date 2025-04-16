@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import CustomUser, SavedProduct
+from .models import CustomUser, SavedProduct, FAQ
 from django.contrib.auth.models import Group
 
 # Register your models here.
@@ -11,5 +11,6 @@ class CustomUserAdmin(admin.ModelAdmin):
     list_display = ['id', 'username', 'first_name', 'phone_number', 'tg_username', 'is_staff']
 
 admin.site.unregister(Group)
+admin.site.register(FAQ)
 admin.site.register(CustomUser, CustomUserAdmin)
 admin.site.register(SavedProduct, SavedProductAdmin)

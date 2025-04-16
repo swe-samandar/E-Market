@@ -1,179 +1,382 @@
 {% extends 'base.html' %}
 
-{% block title %}
-    E-Market - {{ product.title }}
-{% endblock title %}
+{% block title %}E-Market - {{ product.title }}{% endblock %}
 
 {% block main %}
-
 {% load static %}
 
-    <!-- Open Content -->
-    <section class="bg-light">
-        <div class="container pb-5">
-            <div class="row">
-                <div class="col-lg-5 mt-5">
-                    <div class="card mb-3">
+<section class="bg-light">
+    <div class="container pb-5">
+        <div class="row">
+            <div class="col-lg-5 mt-5">
+                <div class="card mb-3">
                     {% with product.images.all|first as image %}
-                        <img class="card-img img-fluid" src="{{ image.image.url }}" alt="Card image cap" id="product-detail">
+                    <img class="card-img img-fluid" src="{{ image.image.url }}" alt="{{ product.title }}" id="product-detail">
                     {% endwith %}
+                </div>
+                <div class="row">
+                    <div class="col-1 align-self-center">
+                        <a href="#multi-item-example" role="button" data-bs-slide="prev">
+                            <i class="text-dark fas fa-chevron-left"></i>
+                            <span class="sr-only">Previous</span>
+                        </a>
                     </div>
-                    <div class="row">
-                        <!--Start Controls-->
-                        <div class="col-1 align-self-center">
-                            <a href="#multi-item-example" role="button" data-bs-slide="prev">
-                                <i class="text-dark fas fa-chevron-left"></i>
-                                <span class="sr-only">Previous</span>
-                            </a>
-                        </div>
-                        <!--End Controls-->
-                        <!--Start Carousel Wrapper-->
-                        <div id="multi-item-example" class="col-10 carousel slide carousel-multi-item" data-bs-ride="carousel">
-                            <!--Start Slides-->
-                            <div class="carousel-inner product-links-wap" role="listbox">
-
-                                <!--First slide-->
-                                <div class="carousel-item active">
+                    
+                    <div id="multi-item-example" class="col-10 carousel slide carousel-multi-item" data-bs-ride="carousel">
+                        <div class="carousel-inner product-links-wap" role="listbox">
+                        {% for i in product.images.all|slice:"1:" %}
+                            {% if forloop.counter0|divisibleby:3 %}
+                                <div class="carousel-item {% if forloop.first %}active{% endif %}">
                                     <div class="row">
-                                        {% for image in product.images.all|slice:"0:3" %}
-                                            <div class="col-4">
-                                                <a href="">
-                                                    <img class="card-img img-fluid" src="{{ image.image.url }}" alt="Product Image 1">
-                                                </a>
-                                            </div>
-                                        {% endfor %}
-                                    </div>
-                                </div>
-                                <!--/.First slide-->
-
-                                <!--Second slide-->
-                                <div class="carousel-item">
-                                    <div class="row">
-                                        {% for image in product.images.all|slice:"3:6" %}
-                                            <div class="col-4">
-                                                <a href="">
-                                                    <img class="card-img img-fluid" src="{{ image.image.url }}" alt="Product Image 1">
-                                                </a>
-                                            </div>
-                                        {% endfor %}
-                                    </div>
-                                </div>
-                                <!--/.Second slide-->
-
-                                <!--Third slide-->
-                                <div class="carousel-item">
-                                    <div class="row">
-                                        {% for image in product.images.all|slice:"6:9" %}
-                                            <div class="col-4">
-                                                <a href="">
-                                                    <img class="card-img img-fluid" src="{{ image.image.url }}" alt="Product Image 1">
-                                                </a>
-                                            </div>
-                                        {% endfor %}
-                                    </div>
-                                </div>
-                                <!--/.Third slide-->
+                            {% endif %}
+                            
+                            <div class="col-4">
+                                <a href="#" class="thumbnail-link" data-image="{{ i.image.url }}">
+                                    <img class="card-img img-fluid" src="{{ i.image.url }}" alt="Product Image">
+                                </a>
                             </div>
-                            <!--End Slides-->
+                            
+                            {% if forloop.counter|divisibleby:3 or forloop.last %}
+                                    </div>
+                                </div>
+                            {% endif %}
+                        {% endfor %}
                         </div>
-                        <!--End Carousel Wrapper-->
-
-                        <!--Start Controls-->
-                        <div class="col-1 align-self-center">
-                            <a href="#multi-item-example" role="button" data-bs-slide="next">
-                                <i class="text-dark fas fa-chevron-right"></i>
-                                <span class="sr-only">Next</span>
-                            </a>
-                        </div>
-                        <!--End Controls-->
+                    </div>
+                    
+                    <div class="col-1 align-self-center">
+                        <a href="#multi-item-example" role="button" data-bs-slide="next">
+                            <i class="text-dark fas fa-chevron-right"></i>
+                            <span class="sr-only">Next</span>
+                        </a>
                     </div>
                 </div>
-                <!-- col end -->
-                <div class="col-lg-7 mt-5">
-                    <div class="card">
-                        <div class="card-body">
-                            <h1 class="h2">{{ product.title }}</h1>
-                            <p class="h3 py-2">${{ product.price }}</p>
-
-                            <ul class="list-inline">
-                                <li class="list-inline-item">
-                                    <h6>Brand:</h6>
-                                </li>
-                                <li class="list-inline-item">
-                                    <p class="text-muted"><strong>{{ product.brand }}</strong></p>
-                                </li>
-                            </ul>
-
-                            <h6>Description:</h6>
-                            <p>{{ product.description }}</p>
-
-                            <form class="row mt-5 mb-5" action="{% url 'users:new-comment' 1 %}" method="post">
-                                {% csrf_token %}
-                                <div class="col d-grid">
-                                <input class="form-control" type="text" name="comment" id="" placeholder="Type your comment..." aria-describedby="'button-addon">
-                                    <button type="submit" class="btn out-line-success">Yuborish</button>
-                                </div>
-                            </form>
-                            <h6><span class="list-inline-item text-dark"> {{ product.comments.count }} Comments</span></h6>
+            </div>
+            
+            <div class="col-lg-7 mt-5">
+                <div class="card">
+                    <div class="card-body">
+                        <h1 class="h2">{{ product.title }}</h1>
+                        <p class="h3 py-2">${{ product.price }}</p>
+                        
+                        <ul class="list-inline">
+                            <li class="list-inline-item"><h6>Brand:</h6></li>
+                            <li class="list-inline-item"><p class="text-muted"><strong>{{ product.brand }}</strong></p></li>
+                        </ul>
+                        
+                        <h6>Description:</h6>
+                        <p>{{ product.description }}</p>
+                        
+                        <form class="row mt-5 mb-5" action="{% url 'users:new-comment' product.id %}" method="post">
+                            {% csrf_token %}
+                            <div class="col d-grid">
+                                <input class="form-control" type="text" name="comment" placeholder="Type your comment...">
+                                <button type="submit" class="btn btn-outline-success mt-2">Yuborish</button>
+                            </div>
+                        </form>
+                        
+                        <div class="comment-section">
+                            <h6><span class="list-inline-item text-dark">{{ product.comments.count }} Comments</span></h6>
                             {% for comment in product.comments.all %}
-                                <small class="text-muted" >@{{ comment.author }} | {{ comment.date }}</small>
-                                <p>{{ comment.body }} 
+                                <small class="text-muted">@{{ comment.author }} | {{ comment.date }}</small>
+                                <p>{{ comment.body }}
                                     {% if request.user == comment.author %}
-                                        <a href="{% url 'users:delete-comment' comment.id %}">Delete</a>
+                                        <a href="{% url 'users:delete-comment' comment.id %}" class="text-danger">Delete</a>
                                     {% endif %}
-                                </p>  
+                                </p>
                             {% endfor %}
-                            <form class="row mt-5 mb-5" action="{% url 'users:saved' product.id %}" method="post">
-                                {% csrf_token %}
-                                <div class="col d-grid">
-                                    <h4>{{ product.title }}</h4>
-                                    <button type="submit" class="btn out-line-success">Saved</button>
-                                </div>
-                            </form>
                         </div>
+                        
+                        <button id="save-btn" 
+                                class="btn {% if request.user in product.savers.all %}btn-success{% else %}btn-outline-success{% endif %}"
+                                data-product-id="{{ product.id }}">
+                            <i class="fas fa-bookmark"></i>
+                            <span id="save-text">
+                                {% if request.user in product.savers.all %}Saved{% else %}Save{% endif %}
+                            </span>
+                        </button>
+                        {% if product.author == request.user %}
+                        <a class="btn btn-danger" href="{% url 'main:update-product' product.id  %}">Update</a>
+                        {% else %}
+                        {% endif %}
                     </div>
                 </div>
             </div>
         </div>
-    </section>
-    <!-- Close Content -->
+    </div>
+</section>
 
-    <!-- Start Article -->
-    <section class="py-5">
-        <div class="container">
-            <div class="row text-left p-2 pb-3">
-                <h4>Related Products</h4>
-            </div>
-            <!--Start Carousel Wrapper-->
-            <div id="carousel-related-product">
-                {% for prod in products %}
-                {% if prod == product %}
-                {% else %}
-                    <div class="p-2 pb-3">
-                        <div class="product-wap card rounded-0">
-                            <div class="card rounded-0">
-                                {% with prod.images.all|first as image %}
-                                    <img class="card-img rounded-0 img-fluid" src="{{ image.image.url }}">
-                                {% endwith %}
-                                <div class="card-img-overlay rounded-0 product-overlay d-flex align-items-center justify-content-center">
-                                    <ul class="list-unstyled">
-                                        <!-- <li><a class="btn btn-success text-white" href="{% url 'main:detail' product.title %}"><i class="far fa-heart"></i></a></li> -->
-                                        <!-- <li><a class="btn btn-success text-white mt-2" href="{% url 'main:detail' product.title %}"><i class="far fa-eye"></i></a></li> -->
-                                        <li><a class="btn btn-success text-white mt-2" href="{% url 'main:detail' product.title %}"><i class="fas fa-cart-plus"></i></a></li>
-                                    </ul>
-                                </div>
-                            </div>
+<!-- Related Products -->
+<section class="py-5">
+    <div class="container">
+        <div class="row text-left p-2 pb-3">
+            <h4>Related Products</h4>
+        </div>
+        
+        <div class="row">
+            {% for prod in products %}
+                {% if prod != product %}
+                    <div class="col-md-3 mb-4">
+                        <div class="card h-100">
+                            {% with prod.images.all|first as image %}
+                                <img class="card-img-top" src="{{ image.image.url }}" alt="{{ prod.title }}">
+                            {% endwith %}
                             <div class="card-body">
-                                <a href="{% url 'main:detail' product.title %}" class="h3 text-decoration-none">{{ prod.title }}</a>                                
-                                <p class="text-center mb-0">${{ prod.price }}</p>
+                                <h5 class="card-title">
+                                    <a href="{% url 'main:detail' prod.title %}">{{ prod.title }}</a>
+                                </h5>
+                                <p class="card-text">${{ prod.price }}</p>
+                            </div>
+                            <div class="card-footer bg-transparent">
+                                <a href="{% url 'main:detail' prod.title %}" class="btn btn-sm btn-outline-success">Ko'rish</a>
                             </div>
                         </div>
                     </div>
                 {% endif %}
-                {% endfor %}
-            </div>
+            {% endfor %}
         </div>
-    </section>
-    <!-- End Article -->
+    </div>
+</section>
 
-{% endblock main %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Asosiy rasmni o'zgartirish
+    const thumbnailLinks = document.querySelectorAll('.thumbnail-link');
+    const mainImage = document.getElementById('product-detail');
+    
+    thumbnailLinks.forEach(link => {
+        link.addEventListener('click', function(e) {
+            e.preventDefault();
+            mainImage.src = this.getAttribute('data-image');
+        });
+    });
+    
+    // Karusel uchun qo'shimcha sozlash
+    const carousel = document.querySelector('.carousel');
+    if (carousel) {
+        new bootstrap.Carousel(carousel, {
+            interval: 5000,
+            wrap: true
+        });
+    }
+});
+
+document.addEventListener('DOMContentLoaded', function() {
+    const saveBtn = document.getElementById('save-btn');
+    const saveText = document.getElementById('save-text');
+    
+    if (saveBtn) {
+        saveBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            const productId = this.getAttribute('data-product-id');
+            const url = "{% url 'users:saved' 0 %}".replace('0', productId);
+            
+            fetch(url, {
+                method: 'POST',
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest',
+                    'X-CSRFToken': getCookie('csrftoken'),
+                    'Content-Type': 'application/json'
+                },
+                credentials: 'same-origin'
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then(data => {
+                if (data.saved) {
+                    saveBtn.classList.remove('btn-outline-success');
+                    saveBtn.classList.add('btn-success');
+                    saveText.textContent = 'Saved';
+                } else {
+                    saveBtn.classList.remove('btn-success');
+                    saveBtn.classList.add('btn-outline-success');
+                    saveText.textContent = 'Save';
+                }
+                showToast(data.message);
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                showToast('An error occurred. Please try again.', 'danger');
+            });
+        });
+    }
+    
+    // CSRF token olish uchun yordamchi funksiya
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+    
+    function showToast(message, type = 'success') {
+        const toastEl = document.createElement('div');
+        toastEl.className = `toast align-items-center text-white bg-${type} border-0 show`;
+        toastEl.setAttribute('role', 'alert');
+        toastEl.style.position = 'fixed';
+        toastEl.style.bottom = '20px';
+        toastEl.style.right = '20px';
+        toastEl.style.zIndex = '9999';
+        
+        toastEl.innerHTML = `
+            <div class="d-flex">
+                <div class="toast-body">
+                    ${message}
+                </div>
+                <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+            </div>
+        `;
+        
+        document.body.appendChild(toastEl);
+        
+        setTimeout(() => {
+            toastEl.remove();
+        }, 3000);
+    }
+});
+    const saveBtn = document.getElementById('save-btn');
+    const saveText = document.getElementById('save-text');
+    
+    if (saveBtn) {
+        saveBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            const productId = this.getAttribute('data-product-id');
+            
+            fetch(`/save/${productId}/`, {
+                method: 'POST',
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest',
+                    'X-CSRFToken': '{{ csrf_token }}',
+                },
+                credentials: 'same-origin'
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.saved) {
+                    saveBtn.classList.remove('btn-outline-success');
+                    saveBtn.classList.add('btn-success');
+                    saveText.textContent = 'Saved';
+                } else {
+                    saveBtn.classList.remove('btn-success');
+                    saveBtn.classList.add('btn-outline-success');
+                    saveText.textContent = 'Save';
+                }
+                
+                // Agar saved items countni ko'rsatadigan element bo'lsa
+                const savedCount = document.getElementById('saved-count');
+                if (savedCount) {
+                    savedCount.textContent = data.count;
+                }
+                
+                // Toast notification ko'rsatish
+                showToast(data.message);
+            })
+            .catch(error => console.error('Error:', error));
+        });
+    }
+    
+    function showToast(message) {
+        // Sizning toast tizimingizga qarab, bu qismni o'zgartiring
+        // Agar bootstrap toast ishlatayotgan bo'lsangiz:
+        const toastEl = document.createElement('div');
+        toastEl.className = 'toast align-items-center text-white bg-success border-0 show';
+        toastEl.setAttribute('role', 'alert');
+        toastEl.setAttribute('aria-live', 'assertive');
+        toastEl.setAttribute('aria-atomic', 'true');
+        toastEl.style.position = 'fixed';
+        toastEl.style.bottom = '20px';
+        toastEl.style.right = '20px';
+        
+        toastEl.innerHTML = `
+            <div class="d-flex">
+                <div class="toast-body">
+                    ${message}
+                </div>
+                <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+            </div>
+        `;
+        
+        document.body.appendChild(toastEl);
+        
+        setTimeout(() => {
+            toastEl.remove();
+        }, 3000);
+    }
+</script>
+
+<style>
+#product-detail {
+    max-height: 500px;
+    object-fit: contain;
+    width: 100%;
+}
+
+.carousel-item .col-4 img {
+    height: 100px;
+    object-fit: cover;
+    cursor: pointer;
+    transition: transform 0.3s;
+    border: 1px solid #eee;
+}
+
+.carousel-item .col-4 img:hover {
+    transform: scale(1.05);
+    border-color: #ddd;
+}
+
+.carousel-control-prev,
+.carousel-control-next {
+    width: 5%;
+    color: #000;
+    opacity: 0.8;
+}
+
+.comment-section {
+    max-height: 300px;
+    overflow-y: auto;
+    padding: 10px;
+    border: 1px solid #eee;
+    border-radius: 5px;
+}
+
+.comment-section p {
+    margin-bottom: 0.5rem;
+}
+
+.comment-section small {
+    font-size: 0.8rem;
+    color: #6c757d;
+}
+
+.card {
+    transition: transform 0.3s;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+}
+
+#save-btn {
+    transition: all 0.3s ease;
+}
+
+.toast {
+    z-index: 9999;
+    min-width: 250px;
+}
+</style>
+
+{% endblock %}

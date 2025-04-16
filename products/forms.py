@@ -2,6 +2,8 @@ from django import forms
 from .models import Product
 
 class NewProductForm(forms.ModelForm):
+    images = forms.ImageField(widget=forms.ClearableFileInput(attrs={'multiple':True}), label='Mahsulot rasmlari')
+
     class Meta:
         model = Product
         fields = ('title', 'description', 'price', 'address', 'category', 'phone_number', 'tg_username')

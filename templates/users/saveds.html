@@ -1,36 +1,203 @@
 {% extends "base.html" %}
-{% block title %}
-  E-Market - Saved Products of @{{request.user}}
-{% endblock title %}
+{% load static %}
+
+{% block title %}E-Market - @{{request.user}}'s Saved Products{% endblock %}
 
 {% block main %}
-   <!-- Product Cart Start -->
-   <div class="container">
-    <div class=" w-100 mt-4">
-        <h4 class="d-block" >Saved Products of @{{ request.user }}</h4>
-        <div class="d-flex flex-wrap justify-content-between">
+<!-- Saqlangan Mahsulotlar -->
+<section class="py-4">
+    <div class="container">
+        <!-- Sarlavha -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="d-flex justify-content-between align-items-center">
+                    <h2 class="mb-0">
+                        <i class="fas fa-bookmark me-2 text-warning"></i>Saqlangan Mahsulotlar
+                        <small class="text-muted d-block mt-1">@{{ request.user }}</small>
+                    </h2>
+                    <span class="badge bg-warning rounded-pill text-dark">{{ saveds.count }} ta</span>
+                </div>
+                <hr class="mt-3 mb-4">
+            </div>
+        </div>
+
+        <!-- Mahsulotlar Gridi -->
+        <div class="row">
             {% for saved in saveds %}
-            <!-- Product Cart Start -->
-            <div class="card border border-0 shadow-sm d-inline-block m-1 mt-3" style="width: 16.5rem;" >
-                {% if saved.product.productimage_set.exists %}
-                <img height="200" class=" card-img-top" src="{{ saved.product.productimage_set.all.first.image.url }}" alt="">
-                {% else %}
-                <img height="200" class=" card-img-top" src="images/14pro2.jfif" alt="">
-                {% endif %}
-                <div class="card-body">
-                    <h6 class="align-center card-title">{{ saved.product.title }}</h6>
-                    <span class="center card-text"><small>$ {{ saved.product.price }}</small></span>
-                    <div class="buttons d-flex flex-wrap justify-content-between ">
-                        <i class="bi bi-bookmark-fill"></i> 
-                        <a href="{% url 'main:detail' 1 %}" class="btn btn-outline-primary" >Details</a>
+            <div class="col-xl-3 col-lg-4 col-md-6 mb-4">
+                <div class="card h-100 border-0 shadow-sm product-card">
+                    <!-- Mahsulot rasmi -->
+                    <div class="position-relative overflow-hidden" style="height: 200px;">
+                        {% if saved.product %}
+                            {% with saved.product.images.all|first as image %}
+                            <a href="{% url 'main:detail' saved.product.title %}">
+                                <img class="card-img-top h-100 object-fit-cover" 
+                                     src="{{ image.image.url }}" 
+                                     alt="{{ saved.product.title }}">
+                            </a>
+                            {% endwith %}
+                        {% else %}
+                            <a href="{% url 'main:detail' saved.product.title %}">
+                                <img class="card-img-top h-100 object-fit-cover" 
+                                     src="{% static 'images/default-product.jpg' %}" 
+                                     alt="Default product image">
+                            </a>
+                        {% endif %}
+                        <div class="card-img-overlay d-flex align-items-start justify-content-end p-2">
+                            <form action="{% url 'users:saved' saved.product.id %}" method="post" class="save-form">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-sm btn-warning rounded-circle shadow-sm save-btn">
+                                    <i class="fas fa-bookmark"></i>
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                    
+                    <!-- Mahsulot tafsilotlari -->
+                    <div class="card-body">
+                        <h5 class="card-title mb-1">
+                            <a href="{% url 'main:detail' saved.product.title %}" 
+                               class="text-decoration-none text-dark">
+                                {{ saved.product.title|truncatechars:40 }}
+                            </a>
+                        </h5>
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <span class="text-success fw-bold">${{ saved.product.price }}</span>
+                            <small class="text-muted">
+                                <i class="fas fa-calendar-alt me-1"></i>
+                                {{ saved.saved_date|date:"d M Y" }}
+                            </small>
+                        </div>
+                    </div>
+                    
+                    <!-- Tugmalar -->
+                    <div class="card-footer bg-transparent border-top-0 pt-0">
+                        <div class="d-flex justify-content-between">
+                            <a href="{% url 'main:detail' saved.product.title %}" 
+                               class="btn btn-outline-primary btn-sm flex-grow-1 me-2">
+                                <i class="fas fa-eye me-1"></i> Ko'rish
+                            </a>
+                            <form action="{% url 'users:saved' saved.product.id %}" method="post" class="d-inline">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-outline-danger btn-sm">
+                                    <i class="fas fa-trash-alt"></i>
+                                </button>
+                            </form>
+                        </div>
                     </div>
                 </div>
-            </div>  
-            <!-- Product Cart End -->
+            </div>
+            {% empty %}
+            <div class="col-12">
+                <div class="alert alert-warning text-center py-5">
+                    <i class="fas fa-bookmark fa-3x mb-4 text-warning"></i>
+                    <h4>Saqlangan mahsulotlar topilmadi</h4>
+                    <p class="mb-0">Mahsulotlarni saqlash uchun <i class="fas fa-bookmark"></i> belgisini bosing</p>
+                    <a href="{% url 'main:index' %}" class="btn btn-warning mt-3">Bosh sahifaga qaytish</a>
+                </div>
+            </div>
             {% endfor %}
-            
         </div>
     </div>
-</div>
-<!-- Product Cart End -->
-{% endblock main %}
+</section>
+
+<style>
+    /* Maxsus stillar */
+    .product-card {
+        transition: all 0.3s ease;
+        border-radius: 8px;
+        overflow: hidden;
+    }
+    
+    .product-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
+    }
+    
+    .object-fit-cover {
+        object-fit: cover;
+        width: 100%;
+    }
+    
+    .save-btn {
+        transition: all 0.2s ease;
+        width: 32px;
+        height: 32px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    
+    .save-form {
+        display: inline;
+    }
+    
+    .card-title a:hover {
+        color: var(--bs-primary) !important;
+    }
+</style>
+
+<script>
+    // AJAX orqali saqlanganlardan o'chirish
+    document.addEventListener('DOMContentLoaded', function() {
+        const saveForms = document.querySelectorAll('.save-form');
+        
+        saveForms.forEach(form => {
+            form.addEventListener('submit', function(e) {
+                e.preventDefault();
+                const form = this;
+                
+                fetch(form.action, {
+                    method: 'POST',
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest',
+                        'X-CSRFToken': form.querySelector('[name=csrfmiddlewaretoken]').value
+                    },
+                    body: new FormData(form)
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        form.closest('.col-xl-3').remove();
+                        showToast('Mahsulot saqlanganlardan olib tashlandi');
+                        
+                        // Yangi saqlanganlar sonini yangilash
+                        const countBadge = document.querySelector('.badge');
+                        if (countBadge) {
+                            const newCount = parseInt(countBadge.textContent) - 1;
+                            countBadge.textContent = newCount + ' ta';
+                        }
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    showToast('Xatolik yuz berdi', 'danger');
+                });
+            });
+        });
+        
+        function showToast(message, type = 'success') {
+            const toastEl = document.createElement('div');
+            toastEl.className = `position-fixed bottom-0 end-0 p-3`;
+            toastEl.style.zIndex = '11';
+            
+            toastEl.innerHTML = `
+                <div class="toast show align-items-center text-white bg-${type === 'success' ? 'warning' : 'danger'} border-0" role="alert" aria-live="assertive" aria-atomic="true">
+                    <div class="d-flex">
+                        <div class="toast-body">
+                            ${message}
+                        </div>
+                        <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+                    </div>
+                </div>
+            `;
+            
+            document.body.appendChild(toastEl);
+            
+            setTimeout(() => {
+                toastEl.remove();
+            }, 3000);
+        }
+    });
+</script>
+{% endblock %}

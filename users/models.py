@@ -29,6 +29,10 @@ class SavedProduct(models.Model):
     product = models.ForeignKey("products.Product", on_delete=models.CASCADE)
     date = models.DateTimeField(auto_now_add=True)
 
+    @property
+    def savers(self):
+        """Returns all users who saved this product"""
+        return CustomUser.objects.filter(savedproduct__product=self)
 
 class FAQ(models.Model):
     author = models.ForeignKey(CustomUser, on_delete=models.CASCADE)

@@ -71,7 +71,10 @@
                             <a href="{% url 'users:followers' customuser.username %}"><button class="btn px-4 ms-3">Followers</button></a>
                             <a href="{% url 'users:profile-edit' %}"><button class="btn px-4 ms-3">Profile edit</button></a>
                             <a href="{% url 'users:password-change' %}"><button class="btn px-4 ms-3">Change password</button></a>
+                        </div><br>
+                        <div class="buttons">
                             <a href="{% url 'main:new-product' %}"><button class="btn px-4 ms-3">Add product</button></a>
+                            <a href="{% url 'users:saveds' %}"><button class="btn px-4 ms-3">Saved products</button></a>
                         </div>
                     {% endif %}
                 </div>
